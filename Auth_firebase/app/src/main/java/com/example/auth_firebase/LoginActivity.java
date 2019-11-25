@@ -56,15 +56,14 @@ public class LoginActivity extends AppCompatActivity {
             String email = user.getEmail();
 
             //vado in MainActivity
-            Intent intent3 = new Intent(this, MainActivity.class);
-            intent3.putExtra("msg", email);
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("msg", email);
             finish();
-            startActivity(intent3);
+            startActivity(i);
 
         }
 
     }
-
 
     public void btnLoginClick(View view) {
         Log.d("LoginActivity", "Login Button Click");
@@ -73,12 +72,14 @@ public class LoginActivity extends AppCompatActivity {
         mNomeUtente = (EditText)findViewById(R.id.etRegName);
         mPassword = (EditText)findViewById(R.id.etRegPass);
 
+        //estrae le stringhe
         String nomeUtente = mNomeUtente.getText().toString();
         String password = mPassword.getText().toString();
 
         Log.d("LoginActivity",nomeUtente);
         Log.d("LoginActivity",password);
 
+        //validazione campi
         if(!(nomeUtente.length() > 7) || !(nomeUtente.contains("@"))) {
             Toast.makeText(this, "Email non valida", Toast.LENGTH_SHORT).show();
             return;
@@ -86,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Password non valida", Toast.LENGTH_SHORT).show();
             return;
         }else
+            //login firebase
             loginUser(nomeUtente, password);
 
     }
@@ -102,10 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
                         }
 
                         // ...

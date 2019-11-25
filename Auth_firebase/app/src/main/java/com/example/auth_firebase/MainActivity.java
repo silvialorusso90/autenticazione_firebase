@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI() {
         //Se l'utente è loggato andare in MainActivity
+
         //prendo l'utente corrente
         FirebaseUser currentUser = mAuth.getCurrentUser();
 

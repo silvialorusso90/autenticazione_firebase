@@ -35,13 +35,11 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        //verifica se l'utente esiste
+
+        //verifica se l'utente è loggato
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Toast.makeText(this, "Utente già loggato.", Toast.LENGTH_SHORT).show();
 
-        //aggiorna l'interfaccia utente
-        //updateUI(currentUser);
     }
 
     @Override
@@ -52,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         //Inizializza la User Interface
         initUI();
 
-        // Initialize Firebase Auth
+        // Initializza Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
     }
@@ -78,20 +76,18 @@ public class RegisterActivity extends AppCompatActivity {
                             //Toast.makeText(RegisterActivity.this, "Authentication success.", Toast.LENGTH_SHORT).show();
                             salvaNome();
 
-                            //TODO: caricare nome in firebase
+                            //carica il nome in firebase
                             setNome(nome);
-
-
 
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             //libera la memoria di RegisterActivity
                             finish();
                             startActivity(intent);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.d("AuthFirebaseRegister", "createUserWithEmail:failure", task.getException());
                             showDialog("Errore", "Errore nella registrazione", android.R.drawable.ic_dialog_alert);
-                            //Toast.makeText(RegisterActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -108,9 +104,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void setNome(String nome){
+
+        //prende l'utente corrente
         FirebaseUser user = mAuth.getCurrentUser();
 
-        //creiamo una changerequest
+        //crea una changerequest
         UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder()
                 .setDisplayName(nome)
                 .build();
@@ -128,19 +126,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-    }
-
-
-
-    //dialog da mostrare dopo la registrazione
-    private void showDialog(String title, String message, int icon){
-        //creiamo un oggetto anonimo
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, null)
-                .setIcon(icon)
-                .show();
     }
 
     public void btnRegistratiClick(View view) {
@@ -162,14 +147,12 @@ public class RegisterActivity extends AppCompatActivity {
         else {
             createFirebaseUser(email, password, nome);
         }
-
-
     }
 
     public void tvLoginClick(View view) {
         Log.d("RegisterActivity", "TextView Login clicked");
-        Intent i = new Intent(this, LoginActivity.class);
 
+        Intent i = new Intent(this, LoginActivity.class);
         finish();
         startActivity(i);
     }
@@ -192,5 +175,16 @@ public class RegisterActivity extends AppCompatActivity {
         String confermaPassword = mConfermaPassword.getText().toString();
         return confermaPassword.equals(password) && password.length() > 7;
 
+    }
+
+    //dialog da mostrare dopo la registrazione
+    private void showDialog(String title, String message, int icon){
+        //creiamo un oggetto anonimo
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, null)
+                .setIcon(icon)
+                .show();
     }
 }
