@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -63,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
         mConfermaPassword = (EditText)findViewById(R.id.etRegPassConf);
     }
 
-    private void createFirebaseUser(String email, String password){
+    private void createFirebaseUser(String email, String password, final String nome){
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -76,6 +77,12 @@ public class RegisterActivity extends AppCompatActivity {
                             //showDialog("Successo", "Registrazione avvenuta con successo", android.R.drawable.ic_dialog_info);
                             //Toast.makeText(RegisterActivity.this, "Authentication success.", Toast.LENGTH_SHORT).show();
                             salvaNome();
+
+                            //TODO: caricare nome in firebase
+                            setNome(nome);
+
+
+
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             //libera la memoria di RegisterActivity
                             finish();
@@ -98,6 +105,29 @@ public class RegisterActivity extends AppCompatActivity {
         String nome = mNome.getText().toString();
         SharedPreferences prefs = getSharedPreferences(CHAT_PREFS, 0);
         prefs.edit().putString(NOME_KEY, nome).apply();
+    }
+
+    private void setNome(String nome){
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        //creiamo una changerequest
+        UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder()
+                .setDisplayName(nome)
+                .build();
+
+        user.updateProfile(changeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d("setNome", "Nome caricato con successo");
+                }
+                else {
+                    Log.d("setNome", "Errore nel caricamento del nome");
+                }
+            }
+        });
+
+
     }
 
 
@@ -130,7 +160,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(this,"La password deve avere almeno 8 caratteri", Toast.LENGTH_SHORT).show();
         }
         else {
-            createFirebaseUser(email, password);
+            createFirebaseUser(email, password, nome);
         }
 
 
@@ -138,9 +168,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void tvLoginClick(View view) {
         Log.d("RegisterActivity", "TextView Login clicked");
+        Intent i = new Intent(this, LoginActivity.class);
 
-        Intent intent2 = new Intent(this, LoginActivity.class);
-        startActivity(intent2);
+        finish();
+        startActivity(i);
     }
 
     //il nome deve avere almeno 3 lettere

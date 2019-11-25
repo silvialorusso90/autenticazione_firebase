@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         //Se l'utente è loggato andare in MainActivity
+
         //prendo l'utente corrente
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -57,12 +58,12 @@ public class LoginActivity extends AppCompatActivity {
             //vado in MainActivity
             Intent intent3 = new Intent(this, MainActivity.class);
             intent3.putExtra("msg", email);
+            finish();
             startActivity(intent3);
 
         }
 
     }
-
 
 
     public void btnLoginClick(View view) {
@@ -78,7 +79,14 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("LoginActivity",nomeUtente);
         Log.d("LoginActivity",password);
 
-        loginUser(nomeUtente, password);
+        if(!(nomeUtente.length() > 7) || !(nomeUtente.contains("@"))) {
+            Toast.makeText(this, "Email non valida", Toast.LENGTH_SHORT).show();
+            return;
+        } else if(!(password.length() > 7)){
+            Toast.makeText(this, "Password non valida", Toast.LENGTH_SHORT).show();
+            return;
+        }else
+            loginUser(nomeUtente, password);
 
     }
 
@@ -111,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("LoginActivity", "Registrati Click");
 
         Intent intent1 = new Intent(this, RegisterActivity.class);
+        finish();
         startActivity(intent1);
 
     }

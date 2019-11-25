@@ -36,14 +36,14 @@ public class MainActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         String extra = b.getString("msg");
 
-
-
         //Presenta i dati all'utente attraverso un Toast
         Toast.makeText(this, "Utente : " + extra, Toast.LENGTH_SHORT).show();
 
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
+        setTitle(mAuth.getCurrentUser().getDisplayName());
     }
 
     @Override
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
             //vado in LoginActivity
             Intent intent = new Intent(this, LoginActivity.class);
+            finish();
             startActivity(intent);
 
         }
