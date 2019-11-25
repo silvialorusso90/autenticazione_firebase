@@ -24,33 +24,15 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private static final String TAG = "LoginActivity";
 
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUI(currentUser);
+        updateUI(currentUser);
     }
 
-    private void updateUI(FirebaseUser currentUser) {
-        //TODO: Se l'utente è loggato andare in MainActivity
-        //prendo l'utente corrente
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        //verifica se c'è un utente loggato
-        if (user != null) {
-
-            //prendo il campo email dell'utente loggato
-            String email = user.getEmail();
-
-            Intent intent3 = new Intent(this, MainActivity.class);
-            intent3.putExtra("msg", email);
-            startActivity(intent3);
-
-        }
-
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +42,28 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
     }
+
+    private void updateUI(FirebaseUser currentUser) {
+        //Se l'utente è loggato andare in MainActivity
+        //prendo l'utente corrente
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        //verifica se c'è un utente loggato
+        if (user != null) {
+
+            //prendo il campo email dell'utente loggato
+            String email = user.getEmail();
+
+            //vado in MainActivity
+            Intent intent3 = new Intent(this, MainActivity.class);
+            intent3.putExtra("msg", email);
+            startActivity(intent3);
+
+        }
+
+    }
+
+
 
     public void btnLoginClick(View view) {
         Log.d("LoginActivity", "Login Button Click");
@@ -75,17 +79,6 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("LoginActivity",password);
 
         loginUser(nomeUtente, password);
-
-        //Se Nome Utente e Password sono corretti passare a MainActivity altrimenti presentare Toast con errore
-        /*if(nomeUtente.equals(mUtente) && password.equals(mPass) ){
-
-            Intent intent3 = new Intent(this, MainActivity.class);
-            intent3.putExtra("msg", nomeUtente);
-
-            startActivity(intent3);
-        }else{
-            Toast.makeText(this, "Nome utente o Password non corretti", Toast.LENGTH_SHORT).show();
-        } */
 
     }
 
